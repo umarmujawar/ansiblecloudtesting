@@ -1,0 +1,26 @@
+- name: Creating a play for stopping EC2 instance creation
+  hosts: all
+  vars:
+    instance_ids:
+      - 'i-0c4903bd3a56c88da'
+      - 'i-0c4903bd3a56c88da'
+
+  tasks:
+    - name: Provision an Instance directed by Yogesh Raheja
+      ec2:
+        aws_access_key: ###################
+        aws_secret_key: ####################
+        instance_ids: '{{ instance_ids }}'
+        region: us-east-1
+        image: ami-b427a1ce
+        wait: yes
+        vpc_subnet_id: subnet-658b6149
+        state: absent
+
+    - name: Delete Secutory 
+      ec2_group:
+        aws_access_key: ############
+        aws_secret_key: #################
+        name: ansible
+        state: absent
+        region: us-east-1

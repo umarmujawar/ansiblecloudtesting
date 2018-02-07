@@ -1,0 +1,18 @@
+---
+- name: Creating a play for simple EC2 instance creation
+  hosts: localhost
+
+  tasks:
+    - name: Provision an Instance directed by Yogesh Raheja
+      ec2:
+        aws_access_key: ####################
+        aws_secret_key: #####################
+        key_name: yogeshaws
+        region: us-east-1
+        instance_type: t2.small
+        image: ami-b427a1ce
+        wait: yes
+        group: default
+        count: 3
+        vpc_subnet_id: subnet-658b6149
+        assign_public_ip: yes

@@ -1,0 +1,60 @@
+---
+- name: Creating a play for simple EC2 instance creation
+  hosts: localhost
+  connection: local
+  become: False
+
+  tasks:
+
+    - name: Provision an Instance directed by Yogesh Raheja
+      ec2:
+        aws_access_key: ###################
+        aws_secret_key: #####################
+        key_name: yogeshaws
+        region: us-east-1
+        zone: us-east-1b
+        instance_type: t2.small
+        image: ami-b427a1ce
+        group: default
+        count: 1
+        wait: yes
+        instance_tags:
+          test: yogeshtest
+        vpc_subnet_id: subnet-658b6149
+        assign_public_ip: yes
+      register: ec2
+
+    - name: Debug information
+      debug: var=ec2
+
+#    - name: Pausing to get post part applied on Instances
+#      pause: minutes=5
+         
+    - name: Create a new volume
+      ec2_vol:
+        aws_access_key: ###################
+        aws_secret_key: #####################
+        region: us-east-1
+        zone: us-east-1b
+#        instance: "{{ ec2.instance_ids }}"
+        delete_on_termination: yes
+        device_name: sdg
+        volume_type: gp2 
+        volume_size: 2
+      register: ec2vol
+
+    - name: Testing vol
+      debug: var=ec2vol
+
+    - name: Attach a newly created volume on the instance
+      ec2_vol:
+        aws_access_key: ###################
+        aws_secret_key: ##########################
+        region: us-east-1
+        instance: "{{ ec2.instance_ids }}"
+        id: "{{ ec2vol.volume.id }}"
+        delete_on_termination: yes      
+      register: attachvol
+
+    - name: Attached volume
+      debug: var=attachvol
