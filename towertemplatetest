@@ -1,0 +1,10 @@
+---
+- name: Tower tempalte test
+  hosts: all
+
+  tasks:
+    - name: Install talk package
+      yum: name=talk state=installed
+
+    - name: Create a file
+      file: path=/var/tmp/templatetest mode=0777 state=touch
